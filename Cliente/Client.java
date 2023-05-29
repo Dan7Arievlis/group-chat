@@ -11,7 +11,7 @@ import java.util.Scanner;
 import javafx.scene.layout.VBox;
 
 public class Client {
-  public static final String DELIMITER = "!";
+  public static final String DELIMITER = "¨";
   private Controller controller;
 
   private Socket socket;

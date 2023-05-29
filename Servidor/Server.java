@@ -8,7 +8,7 @@ import java.util.Scanner;
 import java.util.Map.Entry;
 
 public class Server {
-  public static final String DELIMITER = "!";
+  public static final String DELIMITER = "¨";
 
   ServerSocket serverSocket;
   public static Map<String, APDU> protocols = new HashMap<>();

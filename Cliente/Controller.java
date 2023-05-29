@@ -96,7 +96,7 @@ public class Controller implements Initializable {
 
     // acao do botao enviar
     button_send.setOnAction(event -> {
-      String messageToSend = ta_message.getText();
+      String messageToSend = ta_message.getText().trim();
       if (!messageToSend.isEmpty() && !client.getCurrentChat().isEmpty()) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_RIGHT);
@@ -130,7 +130,7 @@ public class Controller implements Initializable {
 
     // acao do botao buscar
     button_search.setOnAction(event -> {
-      String groupName = tf_group.getText();
+      String groupName = tf_group.getText().trim();
       if (!groupName.isEmpty()) {
         client.searchChat(groupName);
         tf_group.clear();

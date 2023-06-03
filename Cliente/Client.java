@@ -11,7 +11,7 @@ import java.util.Scanner;
 import javafx.scene.layout.VBox;
 
 public class Client {
-  public static final String DELIMITER = "¨";
+public static final String DELIMITER = "`";
   private Controller controller;
 
   private Socket socket;
@@ -140,8 +140,9 @@ public class Client {
       this.currentChat = newGroup;
 
       controller.setScrollPaneContent(currentChat);
-      if(this.getChat(this.currentChat) != null)
+      if(this.getChat(this.currentChat) != null) {
         this.getChat(this.currentChat).setNotificationLabelVisible(false);
+      }
     }
   }
 

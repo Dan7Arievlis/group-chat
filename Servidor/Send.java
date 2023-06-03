@@ -16,7 +16,5 @@ public class Send implements APDU {
         clientHandler.writeMessage(messageToSend);
       }
     }
-    // String messageFromClient = scanner.nextLine();
-    // clientHandler.broadCastMessage(messageFromClient);
   }
 }

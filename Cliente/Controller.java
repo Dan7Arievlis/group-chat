@@ -70,7 +70,9 @@ public class Controller implements Initializable {
     }
 
     lbl_userName.setText(LoginScreen.userName);
+    lbl_userName.setStyle("-fx-font-weight: 900");
     lbl_chatTitle.setAlignment(Pos.CENTER);
+    lbl_chatTitle.setStyle("-fx-font-weight: 900");
 
     sp_message.fitToWidthProperty().set(true);
     sp_group.fitToWidthProperty().set(true);
@@ -99,23 +101,27 @@ public class Controller implements Initializable {
       String messageToSend = ta_message.getText().trim();
       if (!messageToSend.isEmpty() && !client.getCurrentChat().isEmpty()) {
         HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_RIGHT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        hBox.setStyle("-fx-padding: 5 5 5 15;");
+
+        VBox messageVBox = new VBox();
+        messageVBox.setStyle("-fx-padding: 5 5 5 10;" + 
+                             "-fx-background-color: f0ff0f;" + 
+                             "-fx-border-radius: 10px;");
 
         Text text = new Text(messageToSend);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setPadding(new Insets(0, 5, 0, 5));
-        // TODO: set style ou set id
 
         // add data e alinhar na hbox
         LocalTime now = LocalTime.now();
-        Label dateLabel = new Label(String.format("%d:%d", now.getHour(), now.getMinute()));
+        Label dateLabel = new Label(String.format("%02d:%02d", now.getHour(), now.getMinute()));
         dateLabel.setAlignment(Pos.CENTER_RIGHT);
-        dateLabel.setPadding(new Insets(0, 5, 0, 5));
+        dateLabel.setStyle("-fx-font-weight: 200;");
 
-        // hBox.getChildren().add(nameLabel);
-        hBox.getChildren().add(textFlow);
-        hBox.getChildren().add(dateLabel);
+        messageVBox.getChildren().add(textFlow);
+        messageVBox.getChildren().add(dateLabel);
+        hBox.getChildren().add(messageVBox);
 
         VBox vBoxChat = client.getChatVBox(client.getCurrentChat());
         if (vBoxChat == null)
@@ -128,6 +134,19 @@ public class Controller implements Initializable {
       }
     });
 
+    button_send.setStyle("-fx-background-color: lightgray;" + 
+                         "-fx-font-weight: bold;");
+
+    button_send.setOnMouseEntered(event -> {
+      button_send.setStyle("-fx-background-color: gray;" + 
+                           "-fx-font-weight: bold;");
+    });
+
+    button_send.setOnMouseExited(event -> {
+      button_send.setStyle("-fx-background-color: lightgray;" + 
+                           "-fx-font-weight: bold;");
+    });
+
     // acao do botao buscar
     button_search.setOnAction(event -> {
       String groupName = tf_group.getText().trim();
@@ -135,6 +154,19 @@ public class Controller implements Initializable {
         client.searchChat(groupName);
         tf_group.clear();
       }
+    });
+
+    button_search.setStyle("-fx-background-color: lightgray;" + 
+                           "-fx-font-weight: bold;");
+
+    button_search.setOnMouseEntered(event -> {
+      button_search.setStyle("-fx-background-color: gray;" + 
+                             "-fx-font-weight: bold;");
+    });
+    
+    button_search.setOnMouseExited(event -> {
+      button_search.setStyle("-fx-background-color: lightgray;" + 
+                             "-fx-font-weight: bold;");
     });
   }
 

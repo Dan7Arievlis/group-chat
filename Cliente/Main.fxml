@@ -9,13 +9,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="ap_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="781.0" styleClass="ap-main" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="ap_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="781.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="ap_group" prefHeight="474.0" prefWidth="247.0" styleClass="ap-main">
+      <AnchorPane fx:id="ap_group" prefHeight="474.0" prefWidth="247.0">
          <children>
             <ScrollPane fx:id="sp_group" layoutY="83.0" prefHeight="336.0" prefWidth="253.0">
                <content>
-                  <VBox fx:id="vbox_group" prefHeight="334.0" prefWidth="251.0" styleClass="vbox" />
+                  <VBox fx:id="vbox_group" prefHeight="334.0" prefWidth="251.0" />
                </content>
             </ScrollPane>
             <Button fx:id="button_search" layoutX="182.0" layoutY="49.0" mnemonicParsing="false" text="Buscar" />
@@ -34,7 +34,7 @@
       </AnchorPane>
       <ScrollPane fx:id="sp_message" layoutX="253.0" prefHeight="383.0" prefWidth="528.0">
          <content>
-            <VBox fx:id="vbox_message" prefHeight="381.0" prefWidth="526.0" styleClass="vbox" />
+            <VBox fx:id="vbox_message" prefHeight="381.0" prefWidth="526.0" />
          </content>
       </ScrollPane>
       <TextArea fx:id="ta_message" layoutX="266.0" layoutY="397.0" prefHeight="65.0" prefWidth="424.0" />

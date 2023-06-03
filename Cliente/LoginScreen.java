@@ -49,9 +49,9 @@ public class LoginScreen {
     login_bt.setBounds(220, 150, 80, 20);
     panel.add(login_bt);
     login_bt.addActionListener((action) -> {
-      userName = user_tf.getText();
-      serverIp = server_tf.getText();
-      serverPort = port_tf.getText();
+      userName = user_tf.getText().trim();
+      serverIp = server_tf.getText().trim();
+      serverPort = port_tf.getText().trim();
       
       if(!userName.isEmpty() && !serverIp.isEmpty() && !serverPort.isEmpty())
         frame.dispose();

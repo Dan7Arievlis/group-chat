@@ -18,7 +18,6 @@ public class Principal extends Application {
       Parent root = loader.load();
       Scene scene = new Scene(root);
 
-      scene.getStylesheets().add("styles.css");
       stage.setResizable(false);
 
       stage.setOnCloseRequest(event -> {

@@ -17,8 +17,8 @@ public class GroupLayout implements Layout {
   public HBox EditLayout(Scanner scanner, Controller controller) {
     String groupChat = scanner.next();
     HBox hBox = new HBox();
-    hBox.prefHeight(30);
-    hBox.prefWidth(247);
+    hBox.setStyle("-fx-padding: 5 5 5 5;");
+
     Chat chat = new Chat(groupChat, vBoxSettings(controller.getScrollPane()));
     Controller.client.addChat(chat);
 
@@ -27,17 +27,32 @@ public class GroupLayout implements Layout {
       Controller.client.leaveChat(chat);
       controller.getVBoxGroup().getChildren().remove(controller.getVBoxGroup().getChildren().indexOf(hBox));
     });
-    // TODO: style botao
+    deleteButton.setStyle("-fx-background-color: lightgray;" + 
+                            "-fx-font-weight: bold;");
+
+    deleteButton.setOnMouseEntered(event -> {
+      deleteButton.setStyle("-fx-background-color: ff0000;" + 
+                            "-fx-font-weight: bold;");
+    });
+
+    deleteButton.setOnMouseExited(event -> {
+      deleteButton.setStyle("-fx-background-color: lightgray;" + 
+                            "-fx-font-weight: bold;");
+    });
 
     Label chatLabel = new Label(groupChat);
     chatLabel.setAlignment(Pos.CENTER_LEFT);
-    chatLabel.setPadding(new Insets(5, 5, 5, 10));
+    chatLabel.setPadding(new Insets(5, 5, 5, 5));
+    chatLabel.setStyle("-fx-padding: 5 10 5 10;" + 
+                       "-fx-font-weight: 700;");
 
     Label newLabel = new Label("new");
-    newLabel.setAlignment(Pos.CENTER_RIGHT);
-    newLabel.setPadding(new Insets(5, 5, 5, 10));
     newLabel.setVisible(false);
-    // TODO: style label
+    newLabel.setAlignment(Pos.CENTER_RIGHT);
+    newLabel.setPadding(new Insets(3, 3, 3, 3));
+    newLabel.setStyle("-fx-background-color: limegreen;" + 
+                      "-fx-font-weight: bold;" + 
+                      "-fx-text-fill: white;");
 
     chat.setNotificationLabel(newLabel);
 
@@ -47,6 +62,16 @@ public class GroupLayout implements Layout {
           Controller.client.selectChat(groupChat);
         }
       }
+    });
+
+    hBox.setOnMouseEntered(event -> {
+      hBox.setStyle("-fx-padding: 5 5 5 5;" + 
+                    "-fx-background-color: lightgray;");
+    });
+
+    hBox.setOnMouseExited(event -> {
+      hBox.setStyle("-fx-padding: 5 5 5 5;" + 
+                    "-fx-background-color: transparent;");
     });
 
     hBox.getChildren().add(deleteButton);

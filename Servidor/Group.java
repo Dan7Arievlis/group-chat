@@ -31,8 +31,8 @@ public class Group {
       ClientHandler user = ClientHandler.clientHandlers.get(member);
       if (!user.equals(memberId)) {
         user.writeMessage("WARNING" + Server.DELIMITER + groupName + Server.DELIMITER +
-            "SERVER: " + ClientHandler.clientHandlers.get(memberId).getClientUserName() +
-            " has left the chat.");
+            ClientHandler.clientHandlers.get(memberId).getClientUserName() +
+            " saiu do chat.");
       }
     }
 

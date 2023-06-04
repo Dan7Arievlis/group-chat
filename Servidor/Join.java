@@ -13,10 +13,10 @@ public class Join implements APDU {
       for (String member : group.getMembers()) {
         ClientHandler user = ClientHandler.clientHandlers.get(member);
         if (!user.equals(userId)) {
-          user.writeMessage("WARNING" + Server.DELIMITER + groupName + Server.DELIMITER + "SERVER: " + name + " has entered the chat.");
+          user.writeMessage("WARNING" + Server.DELIMITER + groupName + Server.DELIMITER + name + " entrou no chat.");
         } else {
           user.writeMessage("GROUP" + Server.DELIMITER + groupName);
-          user.writeMessage("WARNING" + Server.DELIMITER + groupName + Server.DELIMITER + "SERVER: you has entered the chat.");
+          user.writeMessage("WARNING" + Server.DELIMITER + groupName + Server.DELIMITER + "voce entrou no chat.");
         }
       }
     }

@@ -13,7 +13,7 @@ public class ChatLayout implements Layout {
   public HBox EditLayout(Scanner scanner, Controller controller) {
     String groupChat = scanner.next();
     Chat chat = Controller.client.getChat(groupChat);
-    scanner.next();
+    
     HBox hBox = new HBox();
     hBox.setAlignment(Pos.CENTER_LEFT);
     hBox.setStyle("-fx-padding: 5 5 5 15;");

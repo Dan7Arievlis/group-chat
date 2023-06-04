@@ -9,7 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.bat
+clear.bat
 *.class
 
 # User-specific files (MonoDevelop/Xamarin Studio)

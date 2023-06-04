@@ -1,8 +1,6 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClientHandler implements Runnable {
   public static Map<String, ClientHandler> clientHandlers = new HashMap<>();
   public static Map<String, Group> groups = new ConcurrentHashMap<>();
+  
   private Socket socket;
-  private BufferedReader bufferedReader;
-  private BufferedWriter bufferedWriter;
+  private ObjectInputStream inputStream;
+  private ObjectOutputStream outputStream;
 
   private String clientUserName;
   private String userId;
@@ -22,10 +21,10 @@ public class ClientHandler implements Runnable {
   public ClientHandler(Socket socket) {
     try {
       this.socket = socket;
-      this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+      this.inputStream = new ObjectInputStream(socket.getInputStream());
+      this.outputStream = new ObjectOutputStream(socket.getOutputStream());
     } catch (IOException e) {
-      closeEverything(socket, bufferedReader, bufferedWriter);
+      closeEverything(socket, inputStream, outputStream);
     }
   }
 
@@ -58,22 +57,24 @@ public class ClientHandler implements Runnable {
   public void run() {
     Scanner nameScanner = null;
     try {
-      nameScanner = new Scanner(bufferedReader.readLine());
+      String nameString = (String) inputStream.readObject();
+      nameScanner = new Scanner(nameString);
       nameScanner.useDelimiter(Server.DELIMITER);
       Server.protocols.get("CREATE").primitiveProtocol(nameScanner, this);
 
       while (socket.isConnected()) {
-        try (Scanner scanner = new Scanner(bufferedReader.readLine())) {
+        String message = (String) inputStream.readObject();
+        try (Scanner scanner = new Scanner(message)) {
           scanner.useDelimiter(Server.DELIMITER);
-          // TODO: Scanner
+
           Server.protocols.get(scanner.next()).primitiveProtocol(scanner, this);
         } catch (IOException e) {
-          closeEverything(socket, bufferedReader, bufferedWriter);
+          closeEverything(socket, inputStream, outputStream);
           break;
         }
       }
-    } catch (IOException e) {
-      closeEverything(socket, bufferedReader, bufferedWriter);
+    } catch (IOException | ClassNotFoundException e) {
+      closeEverything(socket, inputStream, outputStream);
     } finally {
       if (nameScanner != null)
         nameScanner.close();
@@ -81,14 +82,10 @@ public class ClientHandler implements Runnable {
   }
 
   public void writeMessage(String messageToSend) throws IOException {
-    try (Scanner scanner = new Scanner(messageToSend)) {
-      bufferedWriter.write(messageToSend);
-      bufferedWriter.newLine();
-      bufferedWriter.flush();
-    }
+    outputStream.writeObject(messageToSend);
   }
 
-  public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+  public void closeEverything(Socket socket, ObjectInputStream inputStream, ObjectOutputStream outputStream) {
     for (Group group : groups.values()) {
       if (group.getMembers().contains(this.userId)) {
         try {
@@ -102,11 +99,11 @@ public class ClientHandler implements Runnable {
       if (socket != null)
         socket.close();
 
-      if (bufferedReader != null)
-        bufferedReader.close();
+      if (inputStream != null)
+        inputStream.close();
 
-      if (bufferedWriter != null)
-        bufferedWriter.close();
+      if (outputStream != null)
+        outputStream.close();
     } catch (IOException e) {
       e.printStackTrace();
     }

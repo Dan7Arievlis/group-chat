@@ -1,8 +1,8 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,8 @@ public static final String DELIMITER = "`";
   private Controller controller;
 
   private Socket socket;
-  private BufferedReader bufferedReader;
-  private BufferedWriter bufferedWriter;
+  private ObjectInputStream inputStream;
+  private ObjectOutputStream outputStream;
   private Map<String, Chat> chats;
 
   private String userId;
@@ -27,18 +27,16 @@ public static final String DELIMITER = "`";
     this.controller = controller;
     try {
       this.socket = socket;
-      this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+      this.inputStream = new ObjectInputStream(socket.getInputStream());
+      this.outputStream = new ObjectOutputStream(socket.getOutputStream());
       this.userName = userName;
       this.chats = new HashMap<>();
 
       this.userId = "" + System.currentTimeMillis();
-      bufferedWriter.write(Client.DELIMITER + this.userId + Client.DELIMITER + this.userName);
-      bufferedWriter.newLine();
-      bufferedWriter.flush();
-
+      outputStream.writeObject(Client.DELIMITER + this.userId + Client.DELIMITER + this.userName);
+      
     } catch (IOException e) {
-      closeEverything(socket, bufferedReader, bufferedWriter);
+      closeEverything(socket, inputStream, outputStream);
     }
   }
 
@@ -66,26 +64,25 @@ public static final String DELIMITER = "`";
     Scanner scanner = null;
     try {
       while (socket.isConnected()) {
-        scanner = new Scanner(bufferedReader.readLine());
+        String mensagem = (String) inputStream.readObject();
+        scanner = new Scanner(mensagem);
         scanner.useDelimiter(Client.DELIMITER);
         String protocol = scanner.next();
 
         this.controller.addLabel(protocol, scanner);
       }
-    } catch (IOException e) {
+    } catch (IOException | ClassNotFoundException e) {
       e.printStackTrace();
-      closeEverything(socket, bufferedReader, bufferedWriter);
+      closeEverything(socket, inputStream, outputStream);
     }
   }
 
   public void sendMessageToServer(String messageToSend) {
     try {
-      bufferedWriter.write(messageToSend);
-      bufferedWriter.newLine();
-      bufferedWriter.flush();
+      outputStream.writeObject(messageToSend);
     } catch (IOException e) {
       e.printStackTrace();
-      closeEverything(socket, bufferedReader, bufferedWriter);
+      closeEverything(socket, inputStream, outputStream);
     }
   }
 
@@ -146,16 +143,16 @@ public static final String DELIMITER = "`";
     }
   }
 
-  public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+  public void closeEverything(Socket socket, InputStream inputStream, OutputStream outputStream) {
     try {
       if (socket != null)
         socket.close();
 
-      if (bufferedReader != null)
-        bufferedReader.close();
+      if (inputStream != null)
+        inputStream.close();
 
-      if (bufferedWriter != null)
-        bufferedWriter.close();
+      if (outputStream != null)
+        outputStream.close();
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -98,39 +98,44 @@ public class Controller implements Initializable {
 
     // acao do botao enviar
     button_send.setOnAction(event -> {
-      String messageToSend = ta_message.getText().trim();
-      if (!messageToSend.isEmpty() && !client.getCurrentChat().isEmpty()) {
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(5, 5, 5, 10));
-        hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.setStyle("-fx-padding: 5 5 5 15;");
-
-        VBox messageVBox = new VBox();
-        messageVBox.setStyle("-fx-padding: 5 5 5 10;" + 
-                             "-fx-background-color: f0ff0f;" + 
-                             "-fx-border-radius: 10px;");
-
-        Text text = new Text(messageToSend);
-        TextFlow textFlow = new TextFlow(text);
-
-        // add data e alinhar na hbox
-        LocalTime now = LocalTime.now();
-        Label dateLabel = new Label(String.format("%02d:%02d", now.getHour(), now.getMinute()));
-        dateLabel.setAlignment(Pos.CENTER_RIGHT);
-        dateLabel.setStyle("-fx-font-weight: 200;");
-
-        messageVBox.getChildren().add(textFlow);
-        messageVBox.getChildren().add(dateLabel);
-        hBox.getChildren().add(messageVBox);
-
-        VBox vBoxChat = client.getChatVBox(client.getCurrentChat());
-        if (vBoxChat == null)
-          vBoxChat = vbox_message;
-        vBoxChat.getChildren().add(hBox);
-        client.getChat(client.getCurrentChat()).notification(this);
-
-        client.sendMessageToChat(messageToSend, now.toString());
-        ta_message.clear();
+      String messageToSend = ta_message.getText();
+      try (Scanner messageScanner = new Scanner(messageToSend)) {
+        while (messageScanner.hasNextLine()) {
+          messageToSend = messageScanner.nextLine().trim();
+          if (!messageToSend.isEmpty() && !client.getCurrentChat().isEmpty()) {
+            HBox hBox = new HBox();
+            hBox.setPadding(new Insets(5, 5, 5, 10));
+            hBox.setAlignment(Pos.CENTER_RIGHT);
+            hBox.setStyle("-fx-padding: 5 5 5 15;");
+    
+            VBox messageVBox = new VBox();
+            messageVBox.setStyle("-fx-padding: 5 5 5 10;" + 
+                                 "-fx-background-color: f0ff0f;" + 
+                                 "-fx-border-radius: 10px;");
+    
+            Text text = new Text(messageToSend);
+            TextFlow textFlow = new TextFlow(text);
+    
+            // add data e alinhar na hbox
+            LocalTime now = LocalTime.now();
+            Label dateLabel = new Label(String.format("%02d:%02d", now.getHour(), now.getMinute()));
+            dateLabel.setAlignment(Pos.CENTER_RIGHT);
+            dateLabel.setStyle("-fx-font-weight: 200;");
+    
+            messageVBox.getChildren().add(textFlow);
+            messageVBox.getChildren().add(dateLabel);
+            hBox.getChildren().add(messageVBox);
+    
+            VBox vBoxChat = client.getChatVBox(client.getCurrentChat());
+            if (vBoxChat == null)
+              vBoxChat = vbox_message;
+            vBoxChat.getChildren().add(hBox);
+            client.getChat(client.getCurrentChat()).notification(this);
+    
+            client.sendMessageToChat(messageToSend, now.toString());
+          }
+          ta_message.clear();
+        }
       }
     });
 
